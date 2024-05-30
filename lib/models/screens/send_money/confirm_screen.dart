@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:transactions_app/utils/constants.dart';
 import 'package:transactions_app/widgets/app_button.dart';
 import 'package:transactions_app/widgets/base_app_bar.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../services/auth_service.dart';
 
@@ -55,6 +56,7 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
       _isSufficient = isSufficient;
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +141,12 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
                     },
                   ),
                   const Spacer(),
-                  Image.asset(ImagePaths.securePayment),
+                  QrImageView(
+  data: _currentUserData!['id']+_userData!['id']+amount,
+  version: QrVersions.auto,
+  size: 200.0,
+),
+                  // Image.asset(),
                   Padding(
                     padding: EdgeInsets.only(
                         bottom: Sizes.size40, top: Sizes.size32),

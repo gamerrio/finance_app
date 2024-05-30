@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/constants.dart';
+import './scan_qr_page.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({
@@ -27,7 +28,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         actions: [
           IconButton(
             icon: Image.asset('assets/scanner_icon.png'),
-            onPressed: () => print(''),
+            onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ScanQrPage()));},
           )
         ],
       ),

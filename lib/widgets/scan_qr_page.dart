@@ -53,21 +53,22 @@ class _ScanQrPageState extends State<ScanQrPage> {
   }
 
   Future<void> _processQrCode(String transactionId) async {
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/process-qr'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode({'transactionId': transactionId}),
-    );
+    print(transactionId);
+    // final response = await http.post(
+    //   Uri.parse('http://localhost:3000/process-qr'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode({'transactionId': transactionId}),
+    // );
 
-    if (response.statusCode == 200) {
-      // Handle success
-      print('Transaction successful');
-    } else {
-      // Handle error
-      print('Failed to process transaction');
-    }
+    // if (response.statusCode == 200) {
+    //   // Handle success
+    //   print('Transaction successful');
+    // } else {
+    //   // Handle error
+    //   print('Failed to process transaction');
+    // }
   }
 
   @override

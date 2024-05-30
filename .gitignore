@@ -9,7 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
-
+QR Gen/QR2/node_modules/
 # IntelliJ related
 *.iml
 *.ipr
