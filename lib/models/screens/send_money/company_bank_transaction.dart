@@ -3,7 +3,7 @@ import 'package:transactions_app/models/screens/send_money/confirm_screen.dart';
 import 'package:transactions_app/utils/constants.dart';
 import 'package:transactions_app/widgets/app_button.dart';
 import 'package:transactions_app/widgets/base_app_bar.dart';
-
+import 'package:local_auth/local_auth.dart';
 import '../../services/auth_service.dart';
 
 class CompanyBankMoneyTransfer extends StatefulWidget {
@@ -29,12 +29,37 @@ class _CompanyBankMoneyTransferState extends State<CompanyBankMoneyTransfer> {
 
   Future<void> _checkAccount(String accountNo) async {
     bool isValidAccount = await AuthService().checkAccount(accountNo);
-
     setState(() {
       _isValidAccount = isValidAccount;
     });
+
+  }
+  Future<void> _runAuth() async {
+        final LocalAuthentication auth = LocalAuthentication();
+    final bool canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final bool canAuthenticate =canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+    print(canAuthenticateWithBiometrics);
+    print(canAuthenticate);
+    final List<BiometricType> availableBiometrics = await auth.getAvailableBiometrics();
+    if (availableBiometrics.isNotEmpty) {
+      // Some biometrics are enrolled.
+      print('Fingerprint avail');
+    }
+
+    if (availableBiometrics.contains(BiometricType.strong) ||
+        availableBiometrics.contains(BiometricType.face)) {
+      // Specific types of biometrics are available.
+      // Use checks like this with caution!
+      print('Others avail');
+    }
+    final bool didAuthenticate = await auth.authenticate(
+    localizedReason: 'Please authenticate to show account balance',
+    options: const AuthenticationOptions(biometricOnly: true));
+    print("Auth Done");
+    print(didAuthenticate);
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,17 +98,18 @@ class _CompanyBankMoneyTransferState extends State<CompanyBankMoneyTransfer> {
                   labelText: Strings.accountTextFieldLabel,
                 ),
               ),
-              const Spacer(),
-              Padding(
-                padding: EdgeInsets.only(bottom: Sizes.size40),
-                child: AppButton(
-                  title: Strings.next,
-                  isValid: true,
-                  onTap: () {
-                    if (_isValidAccount) {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) =>
-                            PinEntryScreen(accountNo: accountNo),
+                const Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(bottom: Sizes.size40),
+                  child: AppButton(
+                    title: Strings.next,
+                    isValid: true,
+                    onTap: () async {
+                      _runAuth();
+                      if (_isValidAccount) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              PinEntryScreen(accountNo: accountNo),
                       ));
                     } else {
                       showModalBottomSheet(

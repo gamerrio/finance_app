@@ -1,6 +1,6 @@
 const assert = require('node:assert');
 const { MongoClient, ServerApiVersion, AutoEncryptionLoggerLevel } = require('mongodb');
-const fs = require('fs')
+const fs = require('fs');
 
 const uri = "mongodb+srv://rio:root@cluster0.y4qh2ob.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 

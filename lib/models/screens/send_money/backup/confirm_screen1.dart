@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:transactions_app/utils/constants.dart';
 import 'package:transactions_app/widgets/app_button.dart';
 import 'package:transactions_app/widgets/base_app_bar.dart';
@@ -58,7 +59,7 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
   }
 
   Future<void> sendRequest(String raccno, String saccno, String amount) async {
-    final uri = Uri.http('192.168.1.7:3000', '/ciper', {
+    final uri = Uri.http('0.0.0.0:3000', '/ciper', {
       'raccno': raccno,
       'saccno': saccno,
       'amount': amount,
@@ -166,6 +167,12 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
                     },
                   ),
                   const Spacer(),
+                  QrImageView(
+                    data: _currentUserData!['id'] + _userData!['id'] + amount,
+                    version: QrVersions.auto,
+                    size: 200.0,
+                  ),
+                  // Image.asset(),
                   Padding(
                     padding: EdgeInsets.only(
                         bottom: Sizes.size40, top: Sizes.size32),
@@ -178,14 +185,15 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
                               senderUserId: _currentUserData!['id'],
                               receiverUserId: _userData!['id'],
                               amount: amount);
-                          if (isChecked) {
-                            AuthService().addToQuickTransfer(_userData!['id']);
-                          }
+                          isChecked.toString() == 'true'
+                              ? AuthService()
+                                  .addToQuickTransfer(_userData!['id'])
+                              : null;
 
                           AuthService()
                               .updateHistory('out', _userData!['id'], amount);
-                          sendRequest(_currentUserData!['account_no'],
-                              _userData!['account_no'], amount);
+                          sendRequest(_userData!['account_no'],
+                              _currentUserData!['account_no'], amount);
                           Navigator.of(context).pushNamed('/success-send-money',
                               arguments: amount);
                         } else {
